@@ -3,66 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASCII Dance Party</title>
+    <title>Cyberpunk ASCII Matrix</title>
     <style>
-        /* Fundo animado colorido */
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
             overflow: hidden;
+            background-color: #0a0a0a; /* Fundo bem escuro */
+            font-family: 'Courier New', Courier, monospace;
+            color: #00ff00; /* Verde Matrix */
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            background-size: 400% 400%;
-            animation: gradientBG 8s ease infinite;
+            position: relative; /* Para posicionar a arte ASCII */
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* Container para a chuva Matrix */
+        #matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Fica no fundo */
+            opacity: 0.5; /* Para não brigar com a arte principal */
         }
 
-        /* Container do Boneco ASCII */
-        #dance-container {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 60px; /* Boneco bem grande */
-            font-weight: bold;
-            color: white;
-            white-space: pre; /* Mantém a estrutura do desenho */
-            text-shadow: 5px 5px 15px rgba(0,0,0,0.4);
-            line-height: 1;
-            user-select: none; /* Impede de selecionar o texto sem querer */
+        /* Container para a arte ASCII cyberpunk principal */
+        #cyberpunk-art {
+            position: relative;
+            z-index: 1; /* Fica acima da chuva */
+            white-space: pre;
+            font-size: clamp(0.8rem, 3vw, 2rem); /* Tamanho responsivo */
+            color: #00e600; /* Verde um pouco mais vibrante */
+            text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 15px #00ff00;
+            padding: 20px;
+            background: rgba(0, 50, 0, 0.2); /* Fundo sutil transparente */
+            border: 1px solid rgba(0, 255, 0, 0.5);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.7);
+            animation: glitch 1s infinite alternate; /* Efeito glitch sutil */
+        }
+
+        /* Animação de glitch para a arte principal */
+        @keyframes glitch {
+            0% { text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 15px #00ff00; transform: translate(0,0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(2px, -2px); }
+            60% { transform: translate(-1px, 1px); }
+            80% { transform: translate(1px, -1px); }
+            100% { text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 15px #00ff00; transform: translate(0,0); }
         }
     </style>
 </head>
 <body>
 
-    <div id="dance-container"></div>
+    <canvas id="matrix-rain"></canvas>
+    
+    <pre id="cyberpunk-art">
+             .-'-.
+            /  _  \\
+           |  / \\  |
+           \\  \\_/  /
+            '-._.-'
+             /|\\
+            //|\\\\
+           // | \\\\
+          //  |  \\\\
+         <M_M_M_M_M>
+    </pre>
 
     <script>
-        const container = document.getElementById('dance-container');
-        
-        // Frames da animação (Dança mais complexa)
-        const frames = [
-            `  O  \n /|\\ \n / \\ `,
-            ` \\O/ \n  |  \n / \\ `,
-            ` _O_ \n  |  \n / \\ `,
-            ` \\O/ \n  |  \n / \\ `
-        ];
+        // --- Chuva Matrix JavaScript ---
+        const canvas = document.getElementById('matrix-rain');
+        const ctx = canvas.getContext('2d');
 
-        let currentFrame = 0;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-        function animate() {
-            container.innerText = frames[currentFrame];
-            currentFrame = (currentFrame + 1) % frames.length;
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@#$%^&*()_+-=[]{}|;:",./<>?`~';
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+
+        const drops = [];
+        for (let x = 0; x < columns; x++) {
+            drops[x] = 1;
         }
 
-        // Muda o frame a cada 400 milissegundos
-        setInterval(animate, 400);
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#0F0'; // Verde para a chuva
+            ctx.font = `${fontSize}px monospace`;
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = characters.charAt(Math.floor(Math.random() * characters.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 30); // Velocidade da chuva (30ms)
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            // Recalcula as colunas ao redimensionar
+            const newColumns = canvas.width / fontSize;
+            while(drops.length < newColumns) drops.push(1);
+            while(drops.length > newColumns) drops.pop();
+        });
+
+        // --- Arte ASCII Cyberpunk (exemplo simples de rosto robótico/terminal) ---
+        // Você pode editar a arte ASCII dentro da tag <pre> no HTML
+        // A arte acima é um exemplo de um rosto robótico/chip, mas pode ser qualquer coisa!
+        // A animação de glitch no CSS já dá um toque especial.
     </script>
 
 </body>
