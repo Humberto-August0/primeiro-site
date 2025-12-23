@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OLÁ LARINHA!!!</title>
+    <title>Olá Larinha! - Colorido</title>
     <style>
-        /* Remove espaços brancos e impede a barra de rolagem */
+        /* Remove espaços e configura o fundo animado */
         body, html {
             margin: 0;
             padding: 0;
@@ -15,28 +15,34 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: black;
+            
+            /* INÍCIO DO CÓDIGO DO FUNDO COLORIDO ANIMADO */
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%; /* Aumenta o tamanho do gradiente para animar */
+            animation: gradientBG 15s ease infinite; /* Animação de 15s, infinita */
+            /* FIM DO CÓDIGO DO FUNDO COLORIDO ANIMADO */
         }
 
-        /* O GIF fica no fundo de tudo */
-        .background-gif {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-            z-index: -1; /* Joga o GIF para trás do texto */
+        /* Animação do gradiente */
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
-        /* Estilo do texto gigante */
+        /* Estilo do texto */
         h1 {
             color: white;
             font-family: 'Arial Black', sans-serif;
-            font-size: 80px; /* Tamanho do texto */
+            font-size: 80px;
             text-align: center;
             text-transform: uppercase;
-            /* Sombra preta ao redor da letra para dar leitura */
             text-shadow: 5px 5px 0px #000, 
                          -2px -2px 0px #000,  
                           2px -2px 0px #000,
@@ -46,8 +52,6 @@
     </style>
 </head>
 <body>
-
-    <img src="https://media.tenor.com/AUteKr8hSX0AAAAM/i-said-hey-he-man.gif" class="background-gif">
 
     <h1>OLÁ, LARINHA</h1>
 
