@@ -1,46 +1,88 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <title>ASCII Game</title>
+    <meta charset="UTF-8">
+    <title>ASCII RPG Quest</title>
     <style>
-        body { background: #000; color: #0f0; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; font-family: monospace; }
-        #game-screen { font-size: 20px; line-height: 1; border: 2px solid #0f0; padding: 10px; }
+        body { background: #050505; color: #00ff41; font-family: 'Courier New', monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        #game-container { border: 2px solid #00ff41; padding: 10px; background: rgba(0, 40, 0, 0.2); box-shadow: 0 0 20px #00ff41; }
+        #ui { margin-top: 15px; width: 400px; font-size: 14px; }
+        .stats { color: #fff; font-weight: bold; margin-bottom: 5px; }
+        pre { margin: 0; line-height: 1.1; font-size: 18px; }
     </style>
 </head>
 <body>
-    <pre id="game-screen"></pre>
+
+    <div class="stats">HP: <span id="hp">10</span> | ITENS: <span id="items">0</span></div>
+    <div id="game-container">
+        <pre id="screen"></pre>
+    </div>
+    <div id="ui">Use as SETAS para andar. Chegue ao [T]! <br>Log: <span id="log">Bem-vindo, Viajante.</span></div>
 
     <script>
-        const screen = document.getElementById('game-screen');
-        const width = 40;
-        const height = 20;
-        let player = { x: 20, y: 10 };
+        const screen = document.getElementById('screen');
+        const log = document.getElementById('log');
+        
+        // Configuração do Mundo
+        const map = [
+            "####################",
+            "#@........#........#",
+            "#.#######.#.######.#",
+            "#.#.....#.#......#.#",
+            "#.#.###.#.######.#.#",
+            "#.#...#..........#.#",
+            "#.#####.##########.#",
+            "#................#.#",
+            "#.##############.#.#",
+            "#...........#..T.#.#",
+            "####################"
+        ].map(row => row.split('')); // Transforma strings em arrays para editar
 
-        // Captura o movimento
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowUp' && player.y > 0) player.y--;
-            if (e.key === 'ArrowDown' && player.y < height - 1) player.y++;
-            if (e.key === 'ArrowLeft' && player.x > 0) player.x--;
-            if (e.key === 'ArrowRight' && player.x < width - 1) player.x++;
-        });
+        let player = { x: 1, y: 1, hp: 10, items: 0 };
 
-        function draw() {
-            let display = "";
-            for (let y = 0; y < height; y++) {
-                for (let x = 0; x < width; x++) {
-                    if (x === player.x && y === player.y) {
-                        display += "@"; // O jogador
-                    } else {
-                        // Background aleatório estilo Matrix
-                        display += Math.random() > 0.95 ? "." : " ";
-                    }
-                }
-                display += "\n";
+        function updateDisplay() {
+            let view = "";
+            for (let y = 0; y < map.length; y++) {
+                view += map[y].join('') + "\n";
             }
-            screen.innerText = display;
+            screen.innerText = view;
+            document.getElementById('hp').innerText = player.hp;
+            document.getElementById('items').innerText = player.items;
         }
 
-        setInterval(draw, 100); // Roda o jogo a 10 FPS
+        window.addEventListener('keydown', (e) => {
+            let nextX = player.x;
+            let nextY = player.y;
+
+            if (e.key === 'ArrowUp') nextY--;
+            if (e.key === 'ArrowDown') nextY++;
+            if (e.key === 'ArrowLeft') nextX--;
+            if (e.key === 'ArrowRight') nextX++;
+
+            const target = map[nextY][nextX];
+
+            // Lógica de Colisão e Interação
+            if (target === '#') {
+                log.innerText = "Isso é uma parede!";
+                return;
+            }
+            
+            if (target === 'T') {
+                player.items++;
+                log.innerText = "Você encontrou o Tesouro! Vitória!";
+                map[nextY][nextX] = '.'; // Remove o tesouro do mapa
+            }
+
+            // Move o jogador no mapa
+            map[player.y][player.x] = '.'; // Limpa onde ele estava
+            player.x = nextX;
+            player.y = nextY;
+            map[player.y][player.x] = '@'; // Coloca ele na nova posição
+
+            updateDisplay();
+        });
+
+        updateDisplay();
     </script>
 </body>
 </html>
