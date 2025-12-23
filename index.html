@@ -3,127 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyberpunk ASCII Matrix</title>
+    <title>Matrix Code Rain</title>
     <style>
+        /* Fundo preto total e sem barras de rolagem */
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #0a0a0a; /* Fundo bem escuro */
-            font-family: 'Courier New', Courier, monospace;
-            color: #00ff00; /* Verde Matrix */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative; /* Para posicionar a arte ASCII */
+            background-color: black;
         }
 
-        /* Container para a chuva Matrix */
-        #matrix-rain {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0; /* Fica no fundo */
-            opacity: 0.5; /* Para não brigar com a arte principal */
-        }
-
-        /* Container para a arte ASCII cyberpunk principal */
-        #cyberpunk-art {
-            position: relative;
-            z-index: 1; /* Fica acima da chuva */
-            white-space: pre;
-            font-size: clamp(0.8rem, 3vw, 2rem); /* Tamanho responsivo */
-            color: #00e600; /* Verde um pouco mais vibrante */
-            text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 15px #00ff00;
-            padding: 20px;
-            background: rgba(0, 50, 0, 0.2); /* Fundo sutil transparente */
-            border: 1px solid rgba(0, 255, 0, 0.5);
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.7);
-            animation: glitch 1s infinite alternate; /* Efeito glitch sutil */
-        }
-
-        /* Animação de glitch para a arte principal */
-        @keyframes glitch {
-            0% { text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 15px #00ff00; transform: translate(0,0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(2px, -2px); }
-            60% { transform: translate(-1px, 1px); }
-            80% { transform: translate(1px, -1px); }
-            100% { text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 15px #00ff00; transform: translate(0,0); }
+        /* O Canvas ocupa a tela inteira */
+        canvas {
+            display: block;
         }
     </style>
 </head>
 <body>
 
-    <canvas id="matrix-rain"></canvas>
-    
-    <pre id="cyberpunk-art">
-             .-'-.
-            /  _  \\
-           |  / \\  |
-           \\  \\_/  /
-            '-._.-'
-             /|\\
-            //|\\\\
-           // | \\\\
-          //  |  \\\\
-         <M_M_M_M_M>
-    </pre>
+    <canvas id="matrix"></canvas>
 
     <script>
-        // --- Chuva Matrix JavaScript ---
-        const canvas = document.getElementById('matrix-rain');
+        const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
 
+        // Faz o canvas ficar do tamanho da janela
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@#$%^&*()_+-=[]{}|;:",./<>?`~';
+        // Caracteres Matrix (Katakana japonês + números + símbolos)
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        const alphabet = katakana + latin + nums;
+
         const fontSize = 16;
         const columns = canvas.width / fontSize;
 
-        const drops = [];
+        // Array para controlar a posição vertical de cada gota
+        const rainDrops = [];
+
+        // Inicializa as gotas no topo da tela
         for (let x = 0; x < columns; x++) {
-            drops[x] = 1;
+            rainDrops[x] = 1;
         }
 
-        function drawMatrix() {
+        const draw = () => {
+            // Cria o efeito de "rastro" escurecendo a tela aos poucos
             ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            ctx.fillStyle = '#0F0'; // Verde para a chuva
-            ctx.font = `${fontSize}px monospace`;
+            ctx.fillStyle = '#0F0'; // Cor verde clássica
+            ctx.font = fontSize + 'px monospace';
 
-            for (let i = 0; i < drops.length; i++) {
-                const text = characters.charAt(Math.floor(Math.random() * characters.length));
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            for (let i = 0; i < rainDrops.length; i++) {
+                // Pega um caractere aleatório
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                
+                // Desenha o caractere
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
 
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
+                // Se a gota chegar no fim da tela, joga ela pro topo aleatoriamente
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
                 }
-                drops[i]++;
+
+                // Move a gota para baixo
+                rainDrops[i]++;
             }
-        }
+        };
 
-        setInterval(drawMatrix, 30); // Velocidade da chuva (30ms)
+        // Redesenha a tela a cada 30 milissegundos
+        setInterval(draw, 30);
 
+        // Ajusta o tamanho se o usuário redimensionar a janela
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            // Recalcula as colunas ao redimensionar
-            const newColumns = canvas.width / fontSize;
-            while(drops.length < newColumns) drops.push(1);
-            while(drops.length > newColumns) drops.pop();
         });
-
-        // --- Arte ASCII Cyberpunk (exemplo simples de rosto robótico/terminal) ---
-        // Você pode editar a arte ASCII dentro da tag <pre> no HTML
-        // A arte acima é um exemplo de um rosto robótico/chip, mas pode ser qualquer coisa!
-        // A animação de glitch no CSS já dá um toque especial.
     </script>
 
 </body>
