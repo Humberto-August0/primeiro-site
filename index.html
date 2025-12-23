@@ -1,89 +1,46 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matrix Code Rain</title>
+    <title>ASCII Game</title>
     <style>
-        /* Fundo preto total e sem barras de rolagem */
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: black;
-        }
-
-        /* O Canvas ocupa a tela inteira */
-        canvas {
-            display: block;
-        }
+        body { background: #000; color: #0f0; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; font-family: monospace; }
+        #game-screen { font-size: 20px; line-height: 1; border: 2px solid #0f0; padding: 10px; }
     </style>
 </head>
 <body>
-
-    <canvas id="matrix"></canvas>
+    <pre id="game-screen"></pre>
 
     <script>
-        const canvas = document.getElementById('matrix');
-        const ctx = canvas.getContext('2d');
+        const screen = document.getElementById('game-screen');
+        const width = 40;
+        const height = 20;
+        let player = { x: 20, y: 10 };
 
-        // Faz o canvas ficar do tamanho da janela
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        // Captura o movimento
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowUp' && player.y > 0) player.y--;
+            if (e.key === 'ArrowDown' && player.y < height - 1) player.y++;
+            if (e.key === 'ArrowLeft' && player.x > 0) player.x--;
+            if (e.key === 'ArrowRight' && player.x < width - 1) player.x++;
+        });
 
-        // Caracteres Matrix (Katakana japonês + números + símbolos)
-        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const nums = '0123456789';
-        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
-        const alphabet = katakana + latin + nums;
-
-        const fontSize = 16;
-        const columns = canvas.width / fontSize;
-
-        // Array para controlar a posição vertical de cada gota
-        const rainDrops = [];
-
-        // Inicializa as gotas no topo da tela
-        for (let x = 0; x < columns; x++) {
-            rainDrops[x] = 1;
+        function draw() {
+            let display = "";
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    if (x === player.x && y === player.y) {
+                        display += "@"; // O jogador
+                    } else {
+                        // Background aleatório estilo Matrix
+                        display += Math.random() > 0.95 ? "." : " ";
+                    }
+                }
+                display += "\n";
+            }
+            screen.innerText = display;
         }
 
-        const draw = () => {
-            // Cria o efeito de "rastro" escurecendo a tela aos poucos
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = '#0F0'; // Cor verde clássica
-            ctx.font = fontSize + 'px monospace';
-
-            for (let i = 0; i < rainDrops.length; i++) {
-                // Pega um caractere aleatório
-                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-                
-                // Desenha o caractere
-                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-
-                // Se a gota chegar no fim da tela, joga ela pro topo aleatoriamente
-                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    rainDrops[i] = 0;
-                }
-
-                // Move a gota para baixo
-                rainDrops[i]++;
-            }
-        };
-
-        // Redesenha a tela a cada 30 milissegundos
-        setInterval(draw, 30);
-
-        // Ajusta o tamanho se o usuário redimensionar a janela
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
+        setInterval(draw, 100); // Roda o jogo a 10 FPS
     </script>
-
 </body>
 </html>
