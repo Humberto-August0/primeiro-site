@@ -3,14 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Primeiro Site</title>
+    <title>OLÁ LARINHA!!!</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; }
-        h1 { color: #2c3e50; }
+        /* Remove espaços brancos e impede a barra de rolagem */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+        }
+
+        /* O GIF fica no fundo de tudo */
+        .background-gif {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: -1; /* Joga o GIF para trás do texto */
+        }
+
+        /* Estilo do texto gigante */
+        h1 {
+            color: white;
+            font-family: 'Arial Black', sans-serif;
+            font-size: 80px; /* Tamanho do texto */
+            text-align: center;
+            text-transform: uppercase;
+            /* Sombra preta ao redor da letra para dar leitura */
+            text-shadow: 5px 5px 0px #000, 
+                         -2px -2px 0px #000,  
+                          2px -2px 0px #000,
+                         -2px  2px 0px #000,
+                          2px  2px 0px #000;
+        }
     </style>
 </head>
 <body>
-    <h1>Olá, Mundo!</h1>
-    <p>Acabei de publicar meu primeiro site usando GitHub Pages.</p>
+
+    <img src="https://media.tenor.com/AUteKr8hSX0AAAAM/i-said-hey-he-man.gif" class="background-gif">
+
+    <h1>OLÁ, LARINHA</h1>
+
 </body>
 </html>
