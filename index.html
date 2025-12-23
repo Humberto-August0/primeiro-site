@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Olá Larinha! - Colorido</title>
+    <title>ASCII Dance Party</title>
     <style>
-        /* Remove espaços e configura o fundo animado */
+        /* Fundo animado colorido */
         body, html {
             margin: 0;
             padding: 0;
@@ -15,45 +15,55 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            
-            /* INÍCIO DO CÓDIGO DO FUNDO COLORIDO ANIMADO */
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            background-size: 400% 400%; /* Aumenta o tamanho do gradiente para animar */
-            animation: gradientBG 15s ease infinite; /* Animação de 15s, infinita */
-            /* FIM DO CÓDIGO DO FUNDO COLORIDO ANIMADO */
+            background-size: 400% 400%;
+            animation: gradientBG 8s ease infinite;
         }
 
-        /* Animação do gradiente */
         @keyframes gradientBG {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        /* Estilo do texto */
-        h1 {
+        /* Container do Boneco ASCII */
+        #dance-container {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 60px; /* Boneco bem grande */
+            font-weight: bold;
             color: white;
-            font-family: 'Arial Black', sans-serif;
-            font-size: 80px;
-            text-align: center;
-            text-transform: uppercase;
-            text-shadow: 5px 5px 0px #000, 
-                         -2px -2px 0px #000,  
-                          2px -2px 0px #000,
-                         -2px  2px 0px #000,
-                          2px  2px 0px #000;
+            white-space: pre; /* Mantém a estrutura do desenho */
+            text-shadow: 5px 5px 15px rgba(0,0,0,0.4);
+            line-height: 1;
+            user-select: none; /* Impede de selecionar o texto sem querer */
         }
     </style>
 </head>
 <body>
 
-    <h1>OLÁ, LARINHA</h1>
+    <div id="dance-container"></div>
+
+    <script>
+        const container = document.getElementById('dance-container');
+        
+        // Frames da animação (Dança mais complexa)
+        const frames = [
+            `  O  \n /|\\ \n / \\ `,
+            ` \\O/ \n  |  \n / \\ `,
+            ` _O_ \n  |  \n / \\ `,
+            ` \\O/ \n  |  \n / \\ `
+        ];
+
+        let currentFrame = 0;
+
+        function animate() {
+            container.innerText = frames[currentFrame];
+            currentFrame = (currentFrame + 1) % frames.length;
+        }
+
+        // Muda o frame a cada 400 milissegundos
+        setInterval(animate, 400);
+    </script>
 
 </body>
 </html>
