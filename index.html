@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="pt-pt">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SBC | Digital Interface</title>
+    <title>Cyber Terminal</title>
     <style>
-        /* Estética Midjourney Premium */
+        /* Estilo Dark Minimalista */
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
             background-color: #000;
-            color: #ffffff;
-            font-family: 'Courier New', monospace; /* Fonte de programação global */
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -21,62 +21,57 @@
             overflow: hidden;
         }
 
-        /* Canvas para a animação de fundo estilo Midjourney */
-        #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            opacity: 0.3; /* Caracteres de fundo discretos */
-        }
-
-        /* Container da Arte ASCII Central */
-        #content {
-            position: relative;
-            z-index: 1;
+        /* Introdução de Terminal */
+        #intro {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #aaa;
             text-align: center;
-            pointer-events: none; /* Deixa o mouse interagir com o fundo se quiseres */
         }
 
-        #header {
-            letter-spacing: 0.5em;
-            font-size: 0.9rem;
-            margin-bottom: 50px;
-            color: rgba(255, 255, 255, 0.7);
-            text-transform: uppercase;
-        }
-
-        /* Arte ASCII do PC */
-        #pc-ascii {
+        /* Arte ASCII Gigante */
+        #pc-display {
             white-space: pre;
-            font-size: clamp(6px, 1.2vw, 14px);
-            line-height: 1.2;
+            font-size: clamp(8px, 1.5vw, 16px); /* Ajusta o tamanho conforme a tela */
+            line-height: 1.1;
             color: #fff;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+            user-select: none;
+        }
+
+        .cursor {
             display: inline-block;
+            width: 10px;
+            height: 1.2rem;
+            background: #fff;
+            margin-left: 5px;
+            animation: blink 0.8s infinite;
+            vertical-align: middle;
         }
 
-        .blink {
-            animation: blinker 1s linear infinite;
-        }
-
-        @keyframes blinker {
+        @keyframes blink {
             50% { opacity: 0; }
+        }
+
+        /* Efeito de glitch ocasional na arte */
+        @keyframes subtle-glitch {
+            0% { opacity: 1; transform: skew(0deg); }
+            2% { opacity: 0.8; transform: skew(2deg); }
+            4% { opacity: 1; transform: skew(0deg); }
+        }
+        #pc-display:hover {
+            animation: subtle-glitch 0.3s ease;
         }
     </style>
 </head>
 <body>
 
-    <canvas id="bg-canvas"></canvas>
+    <div id="intro">
+        [INITIALIZING SECURE PROTOCOL]<br>
+        > CONNECTION ESTABLISHED...<span class="cursor"></span>
+    </div>
 
-    <div id="content">
-        <div id="header">
-            SYSTEM_SBC_INIT <span class="blink">_</span>
-        </div>
-
-        <pre id="pc-ascii">
+    <pre id="pc-display">
              ,----------------,              ,---------,
         ,-----------------------,          ,"        ,"|
       ,"                      ,"|        ,"        ,"  |
@@ -95,58 +90,13 @@
  / ==ooooooooooooooo==.o.  ooo= //   ,`\--{)B     ,"
 /_==__==========__==_ooo__ooo=_/'   /___________,"
 `-----------------------------'
-        </pre>
-    </div>
+    </pre>
 
     <script>
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-
-        let width, height;
-        let particles = [];
-        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>/\\{}_-+=*&%$#!";
-
-        function init() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-            particles = [];
-            // Cria os caracteres que flutuam no fundo
-            for (let i = 0; i < 150; i++) {
-                particles.push({
-                    x: Math.random() * width,
-                    y: Math.random() * height,
-                    text: chars[Math.floor(Math.random() * chars.length)],
-                    speed: 0.2 + Math.random() * 0.5,
-                    fontSize: 10 + Math.random() * 15
-                });
-            }
-        }
-
-        function draw() {
-            ctx.clearRect(0, 0, width, height);
-            ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-            ctx.font = "monospace";
-
-            particles.forEach(p => {
-                ctx.font = `${p.fontSize}px monospace`;
-                ctx.fillText(p.text, p.x, p.y);
-                
-                // Move os caracteres para cima (estilo Midjourney)
-                p.y -= p.speed;
-                
-                // Reset se sair da tela
-                if (p.y < -20) {
-                    p.y = height + 20;
-                    p.x = Math.random() * width;
-                }
-            });
-            requestAnimationFrame(draw);
-        }
-
-        window.addEventListener('resize', init);
-        init();
-        draw();
+        // Pequena animação de digitação no título
+        const intro = document.getElementById('intro');
+        const text = "[SBC_PROTECTION_ENABLED]";
+        // Você pode adicionar lógica aqui para fazer o texto mudar
     </script>
-
 </body>
 </html>
