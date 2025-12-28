@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyber Terminal</title>
+    <title>SBC | Digital Interface</title>
     <style>
-        /* Estilo Dark Minimalista */
+        /* Estética Midjourney: Fundo com profundidade e tipografia fina */
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #000;
-            color: #fff;
-            font-family: 'Courier New', Courier, monospace;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+            color: #ffffff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -21,57 +21,76 @@
             overflow: hidden;
         }
 
-        /* Introdução de Terminal */
-        #intro {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            color: #aaa;
+        /* Texto de introdução elegante */
+        #header {
             text-align: center;
+            margin-bottom: 40px;
+            letter-spacing: 0.3em;
+            font-weight: 200;
+            text-transform: uppercase;
+            opacity: 0.8;
+            animation: fadeIn 2s ease-out;
         }
 
-        /* Arte ASCII Gigante */
-        #pc-display {
+        #header span {
+            display: block;
+            font-size: 0.7rem;
+            margin-top: 10px;
+            color: #666;
+        }
+
+        /* Arte ASCII com brilho suave (glow) */
+        #pc-ascii {
             white-space: pre;
-            font-size: clamp(8px, 1.5vw, 16px); /* Ajusta o tamanho conforme a tela */
-            line-height: 1.1;
-            color: #fff;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
-            user-select: none;
+            font-family: "Courier New", monospace;
+            font-size: clamp(6px, 1.2vw, 14px);
+            line-height: 1.2;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            transition: all 0.5s ease;
+            cursor: crosshair;
         }
 
-        .cursor {
-            display: inline-block;
-            width: 10px;
-            height: 1.2rem;
-            background: #fff;
-            margin-left: 5px;
-            animation: blink 0.8s infinite;
-            vertical-align: middle;
+        #pc-ascii:hover {
+            color: #ffffff;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+            transform: scale(1.02);
         }
 
-        @keyframes blink {
+        /* Rodapé minimalista */
+        #footer {
+            position: absolute;
+            bottom: 30px;
+            font-size: 0.6rem;
+            letter-spacing: 0.5em;
+            color: #444;
+            text-transform: uppercase;
+        }
+
+        /* Animações */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 0.8; transform: translateY(0); }
+        }
+
+        /* Cursor que pisca no estilo Midjourney */
+        .blink {
+            animation: blinker 1.2s linear infinite;
+        }
+
+        @keyframes blinker {
             50% { opacity: 0; }
-        }
-
-        /* Efeito de glitch ocasional na arte */
-        @keyframes subtle-glitch {
-            0% { opacity: 1; transform: skew(0deg); }
-            2% { opacity: 0.8; transform: skew(2deg); }
-            4% { opacity: 1; transform: skew(0deg); }
-        }
-        #pc-display:hover {
-            animation: subtle-glitch 0.3s ease;
         }
     </style>
 </head>
 <body>
 
-    <div id="intro">
-        [INITIALIZING SECURE PROTOCOL]<br>
-        > CONNECTION ESTABLISHED...<span class="cursor"></span>
+    <div id="header">
+        SBC PROTOCOL
+        <span>v. 2.0.25 <span class="blink">_</span></span>
     </div>
 
-    <pre id="pc-display">
+    <pre id="pc-ascii">
              ,----------------,              ,---------,
         ,-----------------------,          ,"        ,"|
       ,"                      ,"|        ,"        ,"  |
@@ -92,11 +111,9 @@
 `-----------------------------'
     </pre>
 
-    <script>
-        // Pequena animação de digitação no título
-        const intro = document.getElementById('intro');
-        const text = "[SBC_PROTECTION_ENABLED]";
-        // Você pode adicionar lógica aqui para fazer o texto mudar
-    </script>
+    <div id="footer">
+        UNAUTHORIZED ACCESS IS PROHIBITED
+    </div>
+
 </body>
 </html>
