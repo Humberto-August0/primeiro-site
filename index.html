@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SBC | Digital Interface</title>
     <style>
-        /* Estética Midjourney: Fundo com profundidade e tipografia fina */
+        /* Estética Midjourney Premium */
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+            background-color: #000;
             color: #ffffff;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Courier New', monospace; /* Fonte de programação global */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -21,61 +21,45 @@
             overflow: hidden;
         }
 
-        /* Texto de introdução elegante */
-        #header {
+        /* Canvas para a animação de fundo estilo Midjourney */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.3; /* Caracteres de fundo discretos */
+        }
+
+        /* Container da Arte ASCII Central */
+        #content {
+            position: relative;
+            z-index: 1;
             text-align: center;
-            margin-bottom: 40px;
-            letter-spacing: 0.3em;
-            font-weight: 200;
+            pointer-events: none; /* Deixa o mouse interagir com o fundo se quiseres */
+        }
+
+        #header {
+            letter-spacing: 0.5em;
+            font-size: 0.9rem;
+            margin-bottom: 50px;
+            color: rgba(255, 255, 255, 0.7);
             text-transform: uppercase;
-            opacity: 0.8;
-            animation: fadeIn 2s ease-out;
         }
 
-        #header span {
-            display: block;
-            font-size: 0.7rem;
-            margin-top: 10px;
-            color: #666;
-        }
-
-        /* Arte ASCII com brilho suave (glow) */
+        /* Arte ASCII do PC */
         #pc-ascii {
             white-space: pre;
-            font-family: "Courier New", monospace;
             font-size: clamp(6px, 1.2vw, 14px);
             line-height: 1.2;
-            color: rgba(255, 255, 255, 0.9);
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-            transition: all 0.5s ease;
-            cursor: crosshair;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            display: inline-block;
         }
 
-        #pc-ascii:hover {
-            color: #ffffff;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
-            transform: scale(1.02);
-        }
-
-        /* Rodapé minimalista */
-        #footer {
-            position: absolute;
-            bottom: 30px;
-            font-size: 0.6rem;
-            letter-spacing: 0.5em;
-            color: #444;
-            text-transform: uppercase;
-        }
-
-        /* Animações */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 0.8; transform: translateY(0); }
-        }
-
-        /* Cursor que pisca no estilo Midjourney */
         .blink {
-            animation: blinker 1.2s linear infinite;
+            animation: blinker 1s linear infinite;
         }
 
         @keyframes blinker {
@@ -85,12 +69,14 @@
 </head>
 <body>
 
-    <div id="header">
-        SBC PROTOCOL
-        <span>v. 2.0.25 <span class="blink">_</span></span>
-    </div>
+    <canvas id="bg-canvas"></canvas>
 
-    <pre id="pc-ascii">
+    <div id="content">
+        <div id="header">
+            SYSTEM_SBC_INIT <span class="blink">_</span>
+        </div>
+
+        <pre id="pc-ascii">
              ,----------------,              ,---------,
         ,-----------------------,          ,"        ,"|
       ,"                      ,"|        ,"        ,"  |
@@ -109,11 +95,58 @@
  / ==ooooooooooooooo==.o.  ooo= //   ,`\--{)B     ,"
 /_==__==========__==_ooo__ooo=_/'   /___________,"
 `-----------------------------'
-    </pre>
-
-    <div id="footer">
-        UNAUTHORIZED ACCESS IS PROHIBITED
+        </pre>
     </div>
+
+    <script>
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let particles = [];
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>/\\{}_-+=*&%$#!";
+
+        function init() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            particles = [];
+            // Cria os caracteres que flutuam no fundo
+            for (let i = 0; i < 150; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    text: chars[Math.floor(Math.random() * chars.length)],
+                    speed: 0.2 + Math.random() * 0.5,
+                    fontSize: 10 + Math.random() * 15
+                });
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+            ctx.font = "monospace";
+
+            particles.forEach(p => {
+                ctx.font = `${p.fontSize}px monospace`;
+                ctx.fillText(p.text, p.x, p.y);
+                
+                // Move os caracteres para cima (estilo Midjourney)
+                p.y -= p.speed;
+                
+                // Reset se sair da tela
+                if (p.y < -20) {
+                    p.y = height + 20;
+                    p.x = Math.random() * width;
+                }
+            });
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', init);
+        init();
+        draw();
+    </script>
 
 </body>
 </html>
