@@ -3,137 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal | Root Access</title>
+    <title>Cyber Terminal</title>
     <style>
-        /* Estilo Dark Geral */
+        /* Estilo Dark Minimalista */
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden;
             background-color: #000;
             color: #fff;
             font-family: 'Courier New', Courier, monospace;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
         }
 
-        /* Chuva Matrix em P&B de fundo */
-        #matrix {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 0;
-            opacity: 0.2; /* Fica discreto no fundo */
-        }
-
-        /* Container da Arte Principal */
-        .console-container {
-            position: relative;
-            z-index: 1;
+        /* Introdução de Terminal */
+        #intro {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #aaa;
             text-align: center;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 30px;
-            border: 1px solid #333;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
         }
 
-        /* Arte ASCII do PC */
-        #pc-art {
+        /* Arte ASCII Gigante */
+        #pc-display {
             white-space: pre;
-            font-size: 14px;
-            line-height: 1.2;
-            margin-bottom: 20px;
-            display: inline-block;
-            animation: pulse 2s infinite;
-        }
-
-        /* Texto de Status */
-        .status-text {
-            font-size: 18px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            font-size: clamp(8px, 1.5vw, 16px); /* Ajusta o tamanho conforme a tela */
+            line-height: 1.1;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+            user-select: none;
         }
 
         .cursor {
-            animation: blink 1s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 0.7; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.02); }
-            100% { opacity: 0.7; transform: scale(1); }
+            display: inline-block;
+            width: 10px;
+            height: 1.2rem;
+            background: #fff;
+            margin-left: 5px;
+            animation: blink 0.8s infinite;
+            vertical-align: middle;
         }
 
         @keyframes blink {
             50% { opacity: 0; }
         }
+
+        /* Efeito de glitch ocasional na arte */
+        @keyframes subtle-glitch {
+            0% { opacity: 1; transform: skew(0deg); }
+            2% { opacity: 0.8; transform: skew(2deg); }
+            4% { opacity: 1; transform: skew(0deg); }
+        }
+        #pc-display:hover {
+            animation: subtle-glitch 0.3s ease;
+        }
     </style>
 </head>
 <body>
 
-    <canvas id="matrix"></canvas>
-
-    <div class="console-container">
-        <div id="pc-art">
-     _______________________
-    |.---------------------.|
-    ||                     ||
-    ||       SYSTEM        ||
-    ||       READY_        ||
-    ||                     ||
-    ||_____________________||
-    '--==--------------==--'
-      /__________________\
-      \__________________/
-       \________________/
-        </div>
-
-        <div class="status-text">
-            > EXECUTANDO PROTOCOLO_SBC<span class="cursor">|</span>
-        </div>
+    <div id="intro">
+        [INITIALIZING SECURE PROTOCOL]<br>
+        > CONNECTION ESTABLISHED...<span class="cursor"></span>
     </div>
 
+    <pre id="pc-display">
+             ,----------------,              ,---------,
+        ,-----------------------,          ,"        ,"|
+      ,"                      ,"|        ,"        ,"  |
+     +-----------------------+  |      ,"        ,"    |
+     |  .-----------------.  |  |     +---------+      |
+     |  |                 |  |  |     | -==----'|      |
+     |  |  I LOVE DOS!    |  |  |     |         |      |
+     |  |  Bad command or |  |  |/----|`---=    |      |
+     |  |  C:\>_          |  |  |   ,/|==== ooo |      ;
+     |  |                 |  |  |  // |(((( [33]|    ,"
+     |  `-----------------'  |," .;'| |((((     |  ,"
+     +-----------------------+  ;;  | |         |,"     
+        /_)______________(_/  //'   | +---------+
+   ___________________________/___  `,
+  /  oooooooooooooooo  .o.  oooo /,   \,"-----------
+ / ==ooooooooooooooo==.o.  ooo= //   ,`\--{)B     ,"
+/_==__==========__==_ooo__ooo=_/'   /___________,"
+`-----------------------------'
+    </pre>
+
     <script>
-        // Lógica da Chuva Matrix Preto e Branco
-        const canvas = document.getElementById('matrix');
-        const ctx = canvas.getContext('2d');
-
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        const chars = "0101010101ABCDEFHIJKLMNOPQRSTUVWXYZ";
-        const fontSize = 14;
-        const columns = canvas.width / fontSize;
-        const drops = Array(Math.floor(columns)).fill(1);
-
-        function drawMatrix() {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Cores entre branco e cinza escuro para o fundo
-            ctx.fillStyle = "#555"; 
-            ctx.font = fontSize + "px monospace";
-
-            for (let i = 0; i < drops.length; i++) {
-                const text = chars.charAt(Math.floor(Math.random() * chars.length));
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
-                drops[i]++;
-            }
-        }
-
-        setInterval(drawMatrix, 50);
-
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
+        // Pequena animação de digitação no título
+        const intro = document.getElementById('intro');
+        const text = "[SBC_PROTECTION_ENABLED]";
+        // Você pode adicionar lógica aqui para fazer o texto mudar
     </script>
 </body>
 </html>
